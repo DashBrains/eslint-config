@@ -4,11 +4,12 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint', 'unused-imports', 'import'],
+  plugins: ['@typescript-eslint', 'unused-imports', 'import', 'jsx-a11y'],
   extends: [
     'plugin:react/recommended',
     'plugin:prettier/recommended',
     'plugin:react-hooks/recommended',
+    'plugin:jsx-a11y/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:import/recommended',
     'prettier',
