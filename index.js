@@ -20,6 +20,7 @@ module.exports = {
     'unused-imports/no-unused-imports': 'error',
     'react/jsx-curly-brace-presence': ['error', 'never'],
     'react/prop-types': 'off',
+    'react/display-name': 'off',
     'prettier/prettier': [
       'error',
       {
