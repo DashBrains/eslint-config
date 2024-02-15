@@ -6,6 +6,7 @@ module.exports = {
   },
   plugins: ['@typescript-eslint', 'unused-imports', 'import', 'jsx-a11y'],
   extends: [
+    'plugin:react/jsx-runtime',
     'plugin:react/recommended',
     'plugin:prettier/recommended',
     'plugin:react-hooks/recommended',
