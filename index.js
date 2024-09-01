@@ -1,26 +1,38 @@
+/* eslint @typescript-eslint/no-require-imports: 0 */
+const unusedImports = require('eslint-plugin-unused-imports')
 const tseslint = require('typescript-eslint')
-const unused = require('eslint-plugin-unused-imports')
-const reactRecommended = require('eslint-plugin-react/configs/recommended')
-const reactJsx = require('eslint-plugin-react/configs/jsx-runtime')
+const react = require('eslint-plugin-react')
 const eslintPluginPrettierRecommended = require('eslint-plugin-prettier/recommended')
-const eslintImport = require('eslint-plugin-import')
-const eslintjsxa11y = require('eslint-plugin-jsx-a11y')
+const eslintPluginImportX = require('eslint-plugin-import-x')
+const jsxA11y = require('eslint-plugin-jsx-a11y')
 const reactHook = require('eslint-plugin-react-hooks')
 
 module.exports = [
   ...tseslint.configs.recommended,
-  reactRecommended,
-  reactJsx,
   eslintPluginPrettierRecommended,
+  eslintPluginImportX.flatConfigs.recommended,
+  jsxA11y.flatConfigs.recommended,
+  react.configs.flat.recommended,
+  react.configs.flat['jsx-runtime'],
   {
+    languageOptions: {
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+      globals: {
+        browser: true,
+        node: true,
+        es2021: true,
+        jest: true,
+      },
+    },
     plugins: {
-      'unused-imports': unused,
-      import: eslintImport,
-      'jsx-a11y': eslintjsxa11y,
+      'unused-imports': unusedImports,
+      react,
       'react-hooks': reactHook,
     },
     rules: {
-      ...eslintjsxa11y.configs.recommended.rules,
       ...reactHook.configs.recommended.rules,
       'no-console': 'error',
       'no-unused-vars': 'off',
@@ -51,14 +63,14 @@ module.exports = [
           fixStyle: 'inline-type-imports',
         },
       ],
-      'import/consistent-type-specifier-style': ['error', 'prefer-inline'],
-      'import/no-extraneous-dependencies': [
+      'import-x/consistent-type-specifier-style': ['error', 'prefer-inline'],
+      'import-x/no-extraneous-dependencies': [
         'error',
         {
           devDependencies: true,
         },
       ],
-      'import/order': ['error'],
+      'import-x/order': ['error'],
     },
     settings: {
       react: {
@@ -70,18 +82,6 @@ module.exports = [
         node: {
           extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },
-      },
-    },
-    languageOptions: {
-      parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-      },
-      globals: {
-        browser: true,
-        node: true,
-        es2021: true,
-        jest: true,
       },
     },
   },

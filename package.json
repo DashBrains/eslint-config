@@ -1,7 +1,7 @@
 {
   "name": "@dashbrains/eslint-config",
-  "version": "1.0.3",
-  "main": "index.old.js",
+  "version": "1.0.4",
+  "main": "index.js",
   "license": "MIT",
   "description": "Eslint configuration used by DashBrains",
   "keywords": [
@@ -30,24 +30,22 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^7.8.0",
-    "@typescript-eslint/parser": "^7.8.0",
-    "eslint": "^9.2.0",
+    "eslint": "^9.9.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-node": "^0.3.9",
-    "eslint-import-resolver-typescript": "^3.6.1",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-jsx-a11y": "^6.8.0",
-    "eslint-plugin-prettier": "^5.1.3",
-    "eslint-plugin-react": "^7.34.1",
+    "eslint-import-resolver-typescript": "^3.6.3",
+    "eslint-plugin-import-x": "^4.1.1",
+    "eslint-plugin-jsx-a11y": "^6.9.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-unused-imports": "^3.2.0",
-    "prettier": "^3.2.5",
-    "typescript-eslint": "^7.8.0"
+    "eslint-plugin-unused-imports": "^4.1.3",
+    "prettier": "^3.3.3",
+    "typescript-eslint": "^8.3.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.3.0",
-    "@commitlint/config-conventional": "^19.2.2",
-    "husky": "^9.0.11"
+    "@commitlint/cli": "^19.4.1",
+    "@commitlint/config-conventional": "^19.4.1",
+    "husky": "^9.1.5"
   }
 }
