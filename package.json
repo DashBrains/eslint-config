@@ -1,6 +1,6 @@
 {
   "name": "@dashbrains/eslint-config",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "index.js",
   "license": "MIT",
   "description": "Eslint configuration used by DashBrains",

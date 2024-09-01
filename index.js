@@ -78,7 +78,7 @@ module.exports = [
         pragma: 'React',
         version: 'detect',
       },
-      'import/resolver': {
+      'import-x/resolver': {
         typescript: {},
         node: {
           extensions: ['.js', '.jsx', '.ts', '.tsx'],
