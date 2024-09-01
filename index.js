@@ -6,6 +6,7 @@ const eslintPluginPrettierRecommended = require('eslint-plugin-prettier/recommen
 const eslintPluginImportX = require('eslint-plugin-import-x')
 const jsxA11y = require('eslint-plugin-jsx-a11y')
 const reactHook = require('eslint-plugin-react-hooks')
+const eslintCompat = require('@eslint/compat')
 
 module.exports = [
   ...tseslint.configs.recommended,
@@ -30,7 +31,7 @@ module.exports = [
     plugins: {
       'unused-imports': unusedImports,
       react,
-      'react-hooks': reactHook,
+      'react-hooks': eslintCompat.fixupPluginRules(reactHook),
     },
     rules: {
       ...reactHook.configs.recommended.rules,
