@@ -21,7 +21,7 @@ pnpm add -D eslint prettier typescript@^6 @dashbrains/eslint-config
 
 #### TypeScript 7
 
-typescript-eslint does not support TypeScript 7 yet and fails with "typescript-eslint does not support TS 7.0". To use TypeScript 7 for type checking, install it next to the TypeScript 6 API with npm aliases, as the [TypeScript 7.0 announcement](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6.0) recommends:
+typescript-eslint does not support TypeScript 7 yet, so the config fails to load when `typescript` resolves to TypeScript 7. To use TypeScript 7 for type checking, install it next to the TypeScript 6 API with npm aliases, as the [TypeScript 7.0 announcement](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6.0) recommends:
 
 ```json
 {
@@ -32,7 +32,7 @@ typescript-eslint does not support TypeScript 7 yet and fails with "typescript-e
 }
 ```
 
-`tsc` then runs TypeScript 7, and typescript-eslint loads the TypeScript 6 API. On Yarn 4, use 4.19 or later. Yarn 4.13 fails to install this setup ([microsoft/typescript-go#4368](https://github.com/microsoft/typescript-go/issues/4368)).
+`tsc` then runs TypeScript 7, and typescript-eslint loads the TypeScript 6 API. `@typescript-eslint/typescript-estree` has an optional peer with the same `@typescript/native` name that accepts only TypeScript 7.1 dev or beta builds. npm therefore warns that it overrides the peer and installs nightly TypeScript 7.1 copies under typescript-eslint, and pnpm reports an unmet optional peer. Linting output stays the same. On Yarn 4, use 4.19 or later. Yarn 4.13 fails to install this setup ([microsoft/typescript-go#4368](https://github.com/microsoft/typescript-go/issues/4368)).
 
 ### Config `eslint.config.mjs`
 
