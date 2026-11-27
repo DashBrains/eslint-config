@@ -97,11 +97,21 @@ module.exports = [
         {
           blankLine: 'always',
           prev: '*',
-          next: ['multiline-block-like', 'multiline-expression'],
+          next: [
+            'multiline-block-like',
+            'multiline-expression',
+            'multiline-const',
+            'multiline-let',
+          ],
         },
         {
           blankLine: 'always',
-          prev: ['multiline-block-like', 'multiline-expression'],
+          prev: [
+            'multiline-block-like',
+            'multiline-expression',
+            'multiline-const',
+            'multiline-let',
+          ],
           next: '*',
         },
       ],

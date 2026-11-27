@@ -94,7 +94,7 @@ The `prettier/prettier` rule formats with the Prettier version your project inst
 
 ### Blank lines
 
-Prettier keeps blank lines but never adds them. The config uses `@stylistic/padding-line-between-statements` to require a blank line before a `return`, around a run of `if` statements, and before and after a multi-line block or expression. Run `eslint --fix` to add them.
+Prettier keeps blank lines but never adds them. The config uses `@stylistic/padding-line-between-statements` to require a blank line before a `return`, around a run of `if` statements, and before and after a multi-line block, expression or declaration. Run `eslint --fix` to add them.
 
 ### Globals
 
