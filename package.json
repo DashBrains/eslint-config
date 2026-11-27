@@ -51,6 +51,6 @@
     "husky": "^9.1.7"
   },
   "peerDependencies": {
-    "eslint": "^9.0.0 || ^10.0.0"
+    "eslint": "^9.7.0 || ^10.0.0"
   }
 }
