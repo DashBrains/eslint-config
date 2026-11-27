@@ -93,6 +93,10 @@ The `prettier/prettier` rule formats with the Prettier version your project inst
 }
 ```
 
+### Blank lines
+
+Prettier keeps blank lines but never adds them. The config uses `@stylistic/padding-line-between-statements` to require a blank line before a `return`, before and after `if` statements, and before and after a multi-line block, expression or declaration. Consecutive single-line `if` statements can stay together, but two multi-line `if` blocks get a blank line between them. Run `eslint --fix` to add them.
+
 ### Import resolution
 
 The config resolves imports through `import-x/resolver-next` with the TypeScript and Node resolvers, which also works under Yarn Plug'n'Play. import-x ignores the older `import-x/resolver` setting when `import-x/resolver-next` is set. To pass resolver options, such as a tsconfig in a subfolder, install `eslint-import-resolver-typescript` and `eslint-plugin-import-x`, and set `import-x/resolver-next` after the shared config:
