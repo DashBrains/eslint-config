@@ -19,11 +19,19 @@ Requires Node.js 20.19, 22.13 or 24 and later, ESLint 9.7 or later or ESLint 10,
 pnpm add -D eslint prettier @dashbrains/eslint-config
 ```
 
+npm picks ESLint 9 by default, because `eslint-plugin-react` and `eslint-plugin-jsx-a11y` do not list ESLint 10 as a peer yet. To use ESLint 10 with npm, add the `overrides` block from [React and ESLint 10](#react-and-eslint-10) to your `package.json`, then install `eslint@10`:
+
+```bash
+npm i -D eslint@10 prettier @dashbrains/eslint-config
+```
+
 #### TypeScript
 
-TypeScript is optional, and TypeScript 7 works without extra setup. typescript-eslint needs the TypeScript JavaScript API, which TypeScript 7.0 does not ship. When your project has no TypeScript, or a version typescript-eslint does not support yet (currently anything outside 4.8.4 to below 6.1, which includes TypeScript 7), the config loads the TypeScript 6 API from a bundled copy of [`@typescript/typescript6`](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6.0). Your `tsc` keeps running your own TypeScript version. Projects on a supported version use their own copy for linting, and the redirect stops once typescript-eslint supports a newer TypeScript.
+TypeScript is optional, and TypeScript 7 works without extra setup. typescript-eslint needs the TypeScript JavaScript API, which TypeScript 7.0 does not ship. When your project has no TypeScript, TypeScript 7.0, or another version typescript-eslint does not support yet (currently anything outside 4.8.4 to below 6.1), the config loads the TypeScript 6 API from a bundled copy of [`@typescript/typescript6`](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6.0). Your `tsc` keeps running your own TypeScript version with npm, pnpm and Yarn 4. Yarn 1 hoists the bundled copy, so it links the `tsc6` and `tsserver` binaries to TypeScript 6, and `tsc` too when your project has no TypeScript. Projects on a supported version use their own copy for linting, and the redirect stops once typescript-eslint supports a newer TypeScript.
 
 The config redirects `typescript` for every CommonJS `require` in the ESLint process. If you enable type-aware rules on a TypeScript 7 project, TypeScript 6 computes the types.
+
+The redirect starts when the config loads, so import `@dashbrains/eslint-config` before anything else that loads TypeScript, such as `typescript-eslint` or `@typescript-eslint/parser`. If one of those loads first on a TypeScript 7 project, ESLint fails with "typescript-eslint does not support TS 7.0".
 
 ### Config `eslint.config.mjs`
 
