@@ -13,26 +13,17 @@
 
 ### Install
 
-Requires Node.js 20.19, 22.13 or 24 and later, ESLint 9.7 or later or ESLint 10, Prettier 3, and TypeScript. The config loads typescript-eslint, which needs TypeScript 4.8.4 or later and below 6.1, even in JavaScript-only projects.
+Requires Node.js 20.19, 22.13 or 24 and later, ESLint 9.7 or later or ESLint 10, and Prettier 3.
 
 ```bash
-pnpm add -D eslint prettier typescript@^6 @dashbrains/eslint-config
+pnpm add -D eslint prettier @dashbrains/eslint-config
 ```
 
-#### TypeScript 7
+#### TypeScript
 
-typescript-eslint does not support TypeScript 7 yet, so the config fails to load when `typescript` resolves to TypeScript 7. To use TypeScript 7 for type checking, install it next to the TypeScript 6 API with npm aliases, as the [TypeScript 7.0 announcement](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6.0) recommends:
+TypeScript is optional, and TypeScript 7 works without extra setup. typescript-eslint needs the TypeScript JavaScript API, which TypeScript 7.0 does not ship. When your project has no TypeScript, or a version typescript-eslint does not support yet (currently anything outside 4.8.4 to below 6.1, which includes TypeScript 7), the config loads the TypeScript 6 API from a bundled copy of [`@typescript/typescript6`](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6.0). Your `tsc` keeps running your own TypeScript version. Projects on a supported version use their own copy for linting, and the redirect stops once typescript-eslint supports a newer TypeScript.
 
-```json
-{
-  "devDependencies": {
-    "@typescript/native": "npm:typescript@^7.0.2",
-    "typescript": "npm:@typescript/typescript6@^6.0.2"
-  }
-}
-```
-
-`tsc` then runs TypeScript 7, and typescript-eslint loads the TypeScript 6 API. `@typescript-eslint/typescript-estree` has an optional peer with the same `@typescript/native` name that accepts only TypeScript 7.1 dev or beta builds. npm therefore warns that it overrides the peer and installs nightly TypeScript 7.1 copies under typescript-eslint, and pnpm reports an unmet optional peer. Linting output stays the same. On Yarn 4, use 4.19 or later. Yarn 4.13 fails to install this setup ([microsoft/typescript-go#4368](https://github.com/microsoft/typescript-go/issues/4368)).
+The config redirects `typescript` for every CommonJS `require` in the ESLint process. If you enable type-aware rules on a TypeScript 7 project, TypeScript 6 computes the types.
 
 ### Config `eslint.config.mjs`
 
