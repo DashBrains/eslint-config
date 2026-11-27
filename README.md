@@ -31,6 +31,8 @@ TypeScript is optional, and TypeScript 7 works without extra setup. typescript-e
 
 The config redirects `typescript` for every CommonJS `require` in the ESLint process. If you enable type-aware rules on a TypeScript 7 project, TypeScript 6 computes the types.
 
+On Yarn 4, use 4.17.1 or later, because earlier versions fail to install TypeScript 7. Under Yarn Plug'n'Play, the bundled TypeScript 6 is not patched for Plug'n'Play, so type-aware rules on a TypeScript 7 project cannot read types from packages and can miss findings. TypeScript 7's own `tsc` cannot resolve packages under Plug'n'Play either. Use `nodeLinker: node-modules` in `.yarnrc.yml` for those projects.
+
 The redirect starts when the config loads, so import `@dashbrains/eslint-config` before anything else that loads TypeScript, such as `typescript-eslint` or `@typescript-eslint/parser`. If one of those loads first on a TypeScript 7 project, ESLint fails with "typescript-eslint does not support TS 7.0".
 
 ### Config `eslint.config.mjs`
@@ -90,6 +92,30 @@ The `prettier/prettier` rule formats with the Prettier version your project inst
   "semi": false
 }
 ```
+
+### Import resolution
+
+The config resolves imports through `import-x/resolver-next` with the TypeScript and Node resolvers, which also works under Yarn Plug'n'Play. import-x ignores the older `import-x/resolver` setting when `import-x/resolver-next` is set. To pass resolver options, such as a tsconfig in a subfolder, install `eslint-import-resolver-typescript` and `eslint-plugin-import-x`, and set `import-x/resolver-next` after the shared config:
+
+```js
+import dashbrains from '@dashbrains/eslint-config'
+import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript'
+import { createNodeResolver } from 'eslint-plugin-import-x'
+
+export default [
+  ...dashbrains,
+  {
+    settings: {
+      'import-x/resolver-next': [
+        createTypeScriptImportResolver({ project: './apps/web/tsconfig.json' }),
+        createNodeResolver(),
+      ],
+    },
+  },
+]
+```
+
+import-x reads exports from `.js`, `.jsx`, `.mjs`, `.cjs`, `.ts`, `.tsx`, `.mts` and `.cts` modules, so `import-x/named` reports missing names from local TypeScript and JSX files. It skips `.d.ts` files, so packages typed only through declaration files are not checked.
 
 ### Globals
 
