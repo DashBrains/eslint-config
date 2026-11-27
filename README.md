@@ -13,15 +13,15 @@
 
 ### Install
 
-Requires ESLint 9 or 10.
+Requires ESLint 9.7 or later, or ESLint 10.
 
 ```bash
 pnpm add -D eslint @dashbrains/eslint-config
 ```
 
-### Config `eslint.config.js`
+### Config `eslint.config.mjs`
 
-The package exports a flat config array. Spread it into your `eslint.config.js`:
+The package exports a flat config array. Spread it into your `eslint.config.mjs`:
 
 ```js
 import dashbrains from '@dashbrains/eslint-config'
@@ -29,7 +29,7 @@ import dashbrains from '@dashbrains/eslint-config'
 export default [...dashbrains]
 ```
 
-With CommonJS:
+With CommonJS, use `eslint.config.cjs`:
 
 ```js
 const dashbrains = require('@dashbrains/eslint-config')
@@ -86,7 +86,7 @@ npm i -D prettier
 
 ### I prefer XXX...
 
-Sure, add a config object after the shared config in your `eslint.config.js`:
+Sure, add a config object after the shared config in your `eslint.config.mjs`:
 
 ```js
 import dashbrains from '@dashbrains/eslint-config'
