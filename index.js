@@ -144,9 +144,6 @@ module.exports = [
       // Keep skipping declaration files, as before, so packages typed with
       // `export =`, such as @types/react, do not report a missing default.
       'import-x/ignore': ['\\.d\\.[cm]?ts$'],
-      // Yarn Plug'n'Play resolves packages into .yarn/cache instead of
-      // node_modules. Treat both as external for import-x/order.
-      'import-x/external-module-folders': ['node_modules', '.yarn'],
       // Pass resolver objects instead of names so resolution works under
       // Yarn Plug'n'Play, which blocks loading resolvers by name.
       'import-x/resolver-next': [

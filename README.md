@@ -19,11 +19,21 @@ Requires Node.js 20.19, 22.13 or 24 and later, ESLint 9.7 or later or ESLint 10,
 pnpm add -D eslint prettier @dashbrains/eslint-config
 ```
 
+npm picks ESLint 9 by default, because `eslint-plugin-react` and `eslint-plugin-jsx-a11y` do not list ESLint 10 as a peer yet. To use ESLint 10 with npm, add the `overrides` block from [React and ESLint 10](#react-and-eslint-10) to your `package.json`, then install `eslint@10`:
+
+```bash
+npm i -D eslint@10 prettier @dashbrains/eslint-config
+```
+
 #### TypeScript
 
-TypeScript is optional, and TypeScript 7 works without extra setup. typescript-eslint needs the TypeScript JavaScript API, which TypeScript 7.0 does not ship. When your project has no TypeScript, or a version typescript-eslint does not support yet (currently anything outside 4.8.4 to below 6.1, which includes TypeScript 7), the config loads the TypeScript 6 API from a bundled copy of [`@typescript/typescript6`](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6.0). Your `tsc` keeps running your own TypeScript version. Projects on a supported version use their own copy for linting, and the redirect stops once typescript-eslint supports a newer TypeScript.
+TypeScript is optional, and TypeScript 7 works without extra setup. typescript-eslint needs the TypeScript JavaScript API, which TypeScript 7.0 does not ship. When your project has no TypeScript, TypeScript 7.0, or another version typescript-eslint does not support yet (currently anything outside 4.8.4 to below 6.1), the config loads the TypeScript 6 API from a bundled copy of [`@typescript/typescript6`](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6.0). Your `tsc` keeps running your own TypeScript version with npm, pnpm and Yarn 4. Yarn 1 hoists the bundled copy, so it links the `tsc6` and `tsserver` binaries to TypeScript 6, and `tsc` too when your project has no TypeScript. Projects on a supported version use their own copy for linting, and the redirect stops once typescript-eslint supports a newer TypeScript.
 
 The config redirects `typescript` for every CommonJS `require` in the ESLint process. If you enable type-aware rules on a TypeScript 7 project, TypeScript 6 computes the types.
+
+On Yarn 4, use 4.17.1 or later, because earlier versions fail to install TypeScript 7. Under Yarn Plug'n'Play, the bundled TypeScript 6 is not patched for Plug'n'Play, so type-aware rules on a TypeScript 7 project cannot read types from packages and can miss findings. TypeScript 7's own `tsc` cannot resolve packages under Plug'n'Play either. Use `nodeLinker: node-modules` in `.yarnrc.yml` for those projects.
+
+The redirect starts when the config loads, so import `@dashbrains/eslint-config` before anything else that loads TypeScript, such as `typescript-eslint` or `@typescript-eslint/parser`. If one of those loads first on a TypeScript 7 project, ESLint fails with "typescript-eslint does not support TS 7.0".
 
 ### Config `eslint.config.mjs`
 
@@ -85,7 +95,31 @@ The `prettier/prettier` rule formats with the Prettier version your project inst
 
 ### Blank lines
 
-Prettier keeps blank lines but never adds them. The config uses `@stylistic/padding-line-between-statements` to require a blank line before a `return`, around a run of `if` statements, and before and after a multi-line block, expression or declaration. Run `eslint --fix` to add them.
+Prettier keeps blank lines but never adds them. The config uses `@stylistic/padding-line-between-statements` to require a blank line before a `return`, before and after `if` statements, and before and after a multi-line block, expression or declaration. Consecutive single-line `if` statements can stay together, but two multi-line `if` blocks get a blank line between them. Run `eslint --fix` to add them.
+
+### Import resolution
+
+The config resolves imports through `import-x/resolver-next` with the TypeScript and Node resolvers, which also works under Yarn Plug'n'Play. import-x ignores the older `import-x/resolver` setting when `import-x/resolver-next` is set. To pass resolver options, such as a tsconfig in a subfolder, install `eslint-import-resolver-typescript` and `eslint-plugin-import-x`, and set `import-x/resolver-next` after the shared config:
+
+```js
+import dashbrains from '@dashbrains/eslint-config'
+import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript'
+import { createNodeResolver } from 'eslint-plugin-import-x'
+
+export default [
+  ...dashbrains,
+  {
+    settings: {
+      'import-x/resolver-next': [
+        createTypeScriptImportResolver({ project: './apps/web/tsconfig.json' }),
+        createNodeResolver(),
+      ],
+    },
+  },
+]
+```
+
+import-x reads exports from `.js`, `.jsx`, `.mjs`, `.cjs`, `.ts`, `.tsx`, `.mts` and `.cts` modules, so `import-x/named` reports missing names from local TypeScript and JSX files. It skips `.d.ts` files, so packages typed only through declaration files are not checked.
 
 ### Globals
 

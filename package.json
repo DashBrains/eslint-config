@@ -6,6 +6,9 @@
     "index.js",
     "typescript-api.js"
   ],
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24"
+  },
   "license": "MIT",
   "description": "Eslint configuration used by DashBrains",
   "keywords": [
