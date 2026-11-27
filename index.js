@@ -43,7 +43,7 @@ module.exports = [
     plugins: {
       'unused-imports': unusedImports,
       react,
-      'react-hooks': eslintCompat.fixupPluginRules(reactHook),
+      'react-hooks': reactHook,
     },
     rules: {
       ...reactHook.configs.recommended.rules,
