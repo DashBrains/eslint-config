@@ -11,15 +11,11 @@ const globals = require('globals')
 
 /*
  * ESLint 10 removed legacy context methods such as context.getFilename()
- * that eslint-plugin-react and eslint-plugin-jsx-a11y still call. Replace
- * their rules in place with @eslint/compat versions so the plugin objects
- * keep their identity, and consumers can still add the upstream presets.
+ * that eslint-plugin-react still calls. Replace its rules in place with
+ * @eslint/compat versions so the plugin object keeps its identity, and
+ * consumers can still add the upstream react presets.
  */
-const patchRulesInPlace = (plugin) => {
-  Object.assign(plugin.rules, eslintCompat.fixupPluginRules(plugin).rules)
-}
-patchRulesInPlace(react)
-patchRulesInPlace(jsxA11y)
+Object.assign(react.rules, eslintCompat.fixupPluginRules(react).rules)
 
 module.exports = [
   ...tseslint.configs.recommended,
