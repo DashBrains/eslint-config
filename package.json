@@ -3,7 +3,8 @@
   "version": "1.1.0",
   "main": "index.js",
   "files": [
-    "index.js"
+    "index.js",
+    "typescript-api.js"
   ],
   "license": "MIT",
   "description": "Eslint configuration used by DashBrains",
@@ -30,13 +31,13 @@
     "format:fix": "prettier '**/*.{js,jsx,ts,tsx}' --write --no-error-on-unmatched-pattern",
     "lint": "eslint '**/*.{js,jsx,ts,tsx}' --no-error-on-unmatched-pattern",
     "format": "prettier '**/*.{js,jsx,ts,tsx}' --check --no-error-on-unmatched-pattern",
-    "prepare": "husky install"
+    "prepare": "husky || true"
   },
   "dependencies": {
     "@eslint/compat": "^2.1.1",
     "@stylistic/eslint-plugin": "^6.0.1",
+    "@typescript/typescript6": "^6.0.2",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-import-resolver-node": "^0.3.9",
     "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-import-x": "^4.18.1",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -45,8 +46,12 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-unused-imports": "^4.4.1",
     "globals": "^17.14.0",
+    "semver": "^7.8.6",
     "typescript-eslint": "^8.74.0"
   },
+  "bundleDependencies": [
+    "@typescript/typescript6"
+  ],
   "devDependencies": {
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",

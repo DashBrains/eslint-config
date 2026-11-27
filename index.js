@@ -1,4 +1,6 @@
 /* eslint @typescript-eslint/no-require-imports: 0 */
+require('./typescript-api')
+
 const unusedImports = require('eslint-plugin-unused-imports')
 const tseslint = require('typescript-eslint')
 const react = require('eslint-plugin-react')
@@ -9,6 +11,21 @@ const reactHook = require('eslint-plugin-react-hooks')
 const eslintCompat = require('@eslint/compat')
 const globals = require('globals')
 const stylistic = require('@stylistic/eslint-plugin')
+
+const {
+  createTypeScriptImportResolver,
+} = require('eslint-import-resolver-typescript')
+
+const moduleExtensions = [
+  '.js',
+  '.jsx',
+  '.mjs',
+  '.cjs',
+  '.ts',
+  '.tsx',
+  '.mts',
+  '.cts',
+]
 
 /*
  * ESLint 10 removed legacy context methods such as context.getFilename()
@@ -121,12 +138,23 @@ module.exports = [
         pragma: 'React',
         version: 'detect',
       },
-      'import-x/resolver': {
-        typescript: {},
-        node: {
-          extensions: ['.js', '.jsx', '.ts', '.tsx'],
-        },
-      },
+      // Read exports from every JavaScript and TypeScript module, not only
+      // .js files, so rules such as import-x/named check them too.
+      'import-x/extensions': moduleExtensions,
+      // Keep skipping declaration files, as before, so packages typed with
+      // `export =`, such as @types/react, do not report a missing default.
+      'import-x/ignore': ['\\.d\\.[cm]?ts$'],
+      // Yarn Plug'n'Play resolves packages into .yarn/cache instead of
+      // node_modules. Treat both as external for import-x/order.
+      'import-x/external-module-folders': ['node_modules', '.yarn'],
+      // Pass resolver objects instead of names so resolution works under
+      // Yarn Plug'n'Play, which blocks loading resolvers by name.
+      'import-x/resolver-next': [
+        createTypeScriptImportResolver(),
+        eslintPluginImportX.createNodeResolver({
+          extensions: moduleExtensions,
+        }),
+      ],
     },
   },
 ]
