@@ -31,7 +31,7 @@
     "format:fix": "prettier '**/*.{js,jsx,ts,tsx}' --write --no-error-on-unmatched-pattern",
     "lint": "eslint '**/*.{js,jsx,ts,tsx}' --no-error-on-unmatched-pattern",
     "format": "prettier '**/*.{js,jsx,ts,tsx}' --check --no-error-on-unmatched-pattern",
-    "prepare": "husky install"
+    "prepare": "husky || true"
   },
   "dependencies": {
     "@eslint/compat": "^2.1.1",
