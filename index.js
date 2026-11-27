@@ -7,6 +7,7 @@ const eslintPluginImportX = require('eslint-plugin-import-x')
 const jsxA11y = require('eslint-plugin-jsx-a11y')
 const reactHook = require('eslint-plugin-react-hooks')
 const eslintCompat = require('@eslint/compat')
+const globals = require('globals')
 
 module.exports = [
   ...tseslint.configs.recommended,
@@ -24,10 +25,10 @@ module.exports = [
         sourceType: 'module',
       },
       globals: {
-        browser: true,
-        node: true,
-        es2021: true,
-        jest: true,
+        ...globals.browser,
+        ...globals.node,
+        ...globals.es2021,
+        ...globals.jest,
       },
     },
     plugins: {
