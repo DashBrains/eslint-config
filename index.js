@@ -8,6 +8,7 @@ const jsxA11y = require('eslint-plugin-jsx-a11y')
 const reactHook = require('eslint-plugin-react-hooks')
 const eslintCompat = require('@eslint/compat')
 const globals = require('globals')
+const stylistic = require('@stylistic/eslint-plugin')
 
 /*
  * ESLint 10 removed legacy context methods such as context.getFilename()
@@ -42,6 +43,7 @@ module.exports = [
     },
     plugins: {
       'unused-imports': unusedImports,
+      '@stylistic': stylistic,
       react,
       'react-hooks': reactHook,
     },
@@ -84,6 +86,25 @@ module.exports = [
         },
       ],
       'import-x/order': ['error'],
+      // Separate a function's steps: setup, guards, the work and the result.
+      // Prettier keeps blank lines but never adds them, so enforce them here.
+      '@stylistic/padding-line-between-statements': [
+        'error',
+        { blankLine: 'always', prev: '*', next: 'return' },
+        { blankLine: 'always', prev: '*', next: 'if' },
+        { blankLine: 'always', prev: 'if', next: '*' },
+        { blankLine: 'any', prev: 'if', next: 'if' },
+        {
+          blankLine: 'always',
+          prev: '*',
+          next: ['multiline-block-like', 'multiline-expression'],
+        },
+        {
+          blankLine: 'always',
+          prev: ['multiline-block-like', 'multiline-expression'],
+          next: '*',
+        },
+      ],
     },
     settings: {
       react: {
