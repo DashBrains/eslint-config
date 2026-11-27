@@ -18,6 +18,9 @@ const globals = require('globals')
 Object.assign(react.rules, eslintCompat.fixupPluginRules(react).rules)
 
 module.exports = [
+  // ESLint matches .js, .mjs and .cjs by default and typescript-eslint adds
+  // TypeScript files. Match .jsx too so React files get linted.
+  { files: ['**/*.jsx'] },
   ...tseslint.configs.recommended,
   eslintPluginPrettierRecommended,
   eslintPluginImportX.flatConfigs.recommended,
