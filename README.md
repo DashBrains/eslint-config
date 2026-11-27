@@ -13,7 +13,7 @@
 
 ### Install
 
-Requires ESLint 9.7 or later, or ESLint 10, plus Prettier 3 and TypeScript. The config loads typescript-eslint, which needs TypeScript 4.8.4 or later and below 6.1, even in JavaScript-only projects.
+Requires Node.js 20.19, 22.13 or 24 and later, ESLint 9.7 or later or ESLint 10, Prettier 3, and TypeScript. The config loads typescript-eslint, which needs TypeScript 4.8.4 or later and below 6.1, even in JavaScript-only projects.
 
 ```bash
 pnpm add -D eslint prettier typescript@^6 @dashbrains/eslint-config
@@ -32,7 +32,7 @@ typescript-eslint does not support TypeScript 7 yet and fails with "typescript-e
 }
 ```
 
-`tsc` then runs TypeScript 7, and typescript-eslint loads the TypeScript 6 API.
+`tsc` then runs TypeScript 7, and typescript-eslint loads the TypeScript 6 API. On Yarn 4, use 4.19 or later. Yarn 4.13 fails to install this setup ([microsoft/typescript-go#4368](https://github.com/microsoft/typescript-go/issues/4368)).
 
 ### Config `eslint.config.mjs`
 
@@ -47,6 +47,7 @@ export default [...dashbrains]
 With CommonJS, use `eslint.config.cjs`:
 
 ```js
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const dashbrains = require('@dashbrains/eslint-config')
 
 module.exports = [...dashbrains]
@@ -97,7 +98,27 @@ The config declares browser, Node.js (including CommonJS names such as `require`
 
 ### React and ESLint 10
 
-The config patches `eslint-plugin-react` so its rules run on ESLint 10. Add its presets directly, for example `react.configs.flat.recommended`. Do not wrap them with `fixupConfigRules` or `fixupPluginRules` from `@eslint/compat`, because the wrapped copy conflicts with the plugin this config registers and ESLint fails with "Cannot redefine plugin".
+The config patches `eslint-plugin-react` so its rules run on ESLint 10. To add one of its presets, put it before the shared config so the shared config's settings, such as the JSX runtime rules, still apply:
+
+```js
+import react from 'eslint-plugin-react'
+import dashbrains from '@dashbrains/eslint-config'
+
+export default [react.configs.flat.recommended, ...dashbrains]
+```
+
+Do not wrap the presets with `fixupConfigRules` or `fixupPluginRules` from `@eslint/compat`. The wrapped copy conflicts with the plugin this config registers, and ESLint fails with "Cannot redefine plugin".
+
+`eslint-plugin-react` and `eslint-plugin-jsx-a11y` do not list ESLint 10 in their peer dependencies yet. Package managers warn about this, and npm fails with `ERESOLVE` when you install `eslint-plugin-react` yourself. With npm, accept your ESLint version through `overrides` in `package.json`:
+
+```json
+{
+  "overrides": {
+    "eslint-plugin-react": { "eslint": "$eslint" },
+    "eslint-plugin-jsx-a11y": { "eslint": "$eslint" }
+  }
+}
+```
 
 ## FAQ
 
