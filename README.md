@@ -13,11 +13,26 @@
 
 ### Install
 
-Requires ESLint 9.7 or later, or ESLint 10.
+Requires ESLint 9.7 or later, or ESLint 10, plus Prettier 3 and TypeScript. The config loads typescript-eslint, which needs TypeScript 4.8.4 or later and below 6.1, even in JavaScript-only projects.
 
 ```bash
-pnpm add -D eslint @dashbrains/eslint-config
+pnpm add -D eslint prettier typescript@^6 @dashbrains/eslint-config
 ```
+
+#### TypeScript 7
+
+typescript-eslint does not support TypeScript 7 yet and fails with "typescript-eslint does not support TS 7.0". To use TypeScript 7 for type checking, install it next to the TypeScript 6 API with npm aliases, as the [TypeScript 7.0 announcement](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6.0) recommends:
+
+```json
+{
+  "devDependencies": {
+    "@typescript/native": "npm:typescript@^7.0.2",
+    "typescript": "npm:@typescript/typescript6@^6.0.2"
+  }
+}
+```
+
+`tsc` then runs TypeScript 7, and typescript-eslint loads the TypeScript 6 API.
 
 ### Config `eslint.config.mjs`
 
@@ -66,7 +81,7 @@ Install [VS Code ESLint extension](https://marketplace.visualstudio.com/items?it
 
 ### Prettier
 
-If you want to apply formatting with prettier, you can add the following to your `.prettierrc`:
+The `prettier/prettier` rule formats with the Prettier version your project installs. To get the same output from the Prettier CLI or editor integration, add the following to your `.prettierrc`:
 
 ```json
 {
@@ -76,11 +91,13 @@ If you want to apply formatting with prettier, you can add the following to your
 }
 ```
 
-and then
+### Globals
 
-```bash
-npm i -D prettier
-```
+The config declares browser, Node.js (including CommonJS names such as `require` and `module`), ES2021 and Jest globals for every linted file. If you enable `no-undef`, it will not report those names in any file.
+
+### React and ESLint 10
+
+The config patches `eslint-plugin-react` so its rules run on ESLint 10. Add its presets directly, for example `react.configs.flat.recommended`. Do not wrap them with `fixupConfigRules` or `fixupPluginRules` from `@eslint/compat`, because the wrapped copy conflicts with the plugin this config registers and ESLint fails with "Cannot redefine plugin".
 
 ## FAQ
 
