@@ -1,27 +1,44 @@
 /* eslint @typescript-eslint/no-require-imports: 0 */
 /*
  * TypeScript 7.0 ships no JavaScript API, and typescript-eslint refuses to
- * load it. When `typescript` resolves to TypeScript 7 or is not installed,
- * resolve it to the TypeScript 6 API from @typescript/typescript6 instead.
- * Projects on TypeScript 4.8 to 6 keep their own copy.
+ * load it. When `typescript` or one of its subpaths, such as
+ * typescript/lib/tsserverlibrary, resolves to a version outside the range
+ * typescript-eslint supports, or is not installed, resolve it to the
+ * TypeScript 6 API from @typescript/typescript6 instead. Projects on a
+ * supported version keep their own copy, so the redirect stops once
+ * typescript-eslint supports a newer TypeScript.
  */
 const fs = require('node:fs')
 const Module = require('node:module')
+const semver = require('semver')
 
-const typescript6 = require.resolve('@typescript/typescript6')
-const majorByPackageJson = new Map()
+const typescript6Prefix = '@typescript/typescript6'
+const supportedRange = require('typescript-eslint/package.json')
+  .peerDependencies.typescript
+const supportedByPackageJson = new Map()
 
-const typescriptMajor = (packageJsonPath) => {
-  if (!majorByPackageJson.has(packageJsonPath)) {
+const isSupported = (packageJsonPath) => {
+  if (!supportedByPackageJson.has(packageJsonPath)) {
     const { version } = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
-    majorByPackageJson.set(packageJsonPath, Number(version.split('.')[0]))
+    supportedByPackageJson.set(
+      packageJsonPath,
+      semver.satisfies(version, supportedRange, { includePrerelease: true }),
+    )
   }
-  return majorByPackageJson.get(packageJsonPath)
+  return supportedByPackageJson.get(packageJsonPath)
 }
 
 const resolveFilename = Module._resolveFilename
+const resolveTypeScript6 = (request) => {
+  try {
+    return require.resolve(request.replace('typescript', typescript6Prefix))
+  } catch {
+    return null
+  }
+}
+
 Module._resolveFilename = function (request, parent, ...rest) {
-  if (request !== 'typescript') {
+  if (request !== 'typescript' && !request.startsWith('typescript/')) {
     return resolveFilename.call(this, request, parent, ...rest)
   }
   let packageJsonPath
@@ -33,10 +50,13 @@ Module._resolveFilename = function (request, parent, ...rest) {
       ...rest,
     )
   } catch {
-    return typescript6
+    packageJsonPath = null
   }
-  if (typescriptMajor(packageJsonPath) >= 7) {
-    return typescript6
+  if (packageJsonPath === null || !isSupported(packageJsonPath)) {
+    const redirected = resolveTypeScript6(request)
+    if (redirected !== null) {
+      return redirected
+    }
   }
   return resolveFilename.call(this, request, parent, ...rest)
 }
