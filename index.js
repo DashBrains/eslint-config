@@ -12,9 +12,11 @@ module.exports = [
   ...tseslint.configs.recommended,
   eslintPluginPrettierRecommended,
   eslintPluginImportX.flatConfigs.recommended,
-  jsxA11y.flatConfigs.recommended,
-  react.configs.flat.recommended,
-  react.configs.flat['jsx-runtime'],
+  ...eslintCompat.fixupConfigRules([
+    jsxA11y.flatConfigs.recommended,
+    react.configs.flat.recommended,
+    react.configs.flat['jsx-runtime'],
+  ]),
   {
     languageOptions: {
       parserOptions: {
@@ -30,7 +32,7 @@ module.exports = [
     },
     plugins: {
       'unused-imports': unusedImports,
-      react,
+      react: eslintCompat.fixupPluginRules(react),
       'react-hooks': eslintCompat.fixupPluginRules(reactHook),
     },
     rules: {
