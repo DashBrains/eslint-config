@@ -1,4 +1,6 @@
 /* eslint @typescript-eslint/no-require-imports: 0 */
+require('./typescript-api')
+
 const unusedImports = require('eslint-plugin-unused-imports')
 const tseslint = require('typescript-eslint')
 const react = require('eslint-plugin-react')
