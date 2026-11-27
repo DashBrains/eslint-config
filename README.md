@@ -13,16 +13,28 @@
 
 ### Install
 
+Requires ESLint 9 or 10.
+
 ```bash
 pnpm add -D eslint @dashbrains/eslint-config
 ```
 
-### Config `.eslintrc`
+### Config `eslint.config.js`
 
-```json
-{
-  "extends": "@dashbrains/eslint-config"
-}
+The package exports a flat config array. Spread it into your `eslint.config.js`:
+
+```js
+import dashbrains from '@dashbrains/eslint-config'
+
+export default [...dashbrains]
+```
+
+With CommonJS:
+
+```js
+const dashbrains = require('@dashbrains/eslint-config')
+
+module.exports = [...dashbrains]
 ```
 
 ### Add script for package.json
@@ -74,17 +86,19 @@ npm i -D prettier
 
 ### I prefer XXX...
 
-Sure, you can override the rules in your `.eslintrc` file.
+Sure, add a config object after the shared config in your `eslint.config.js`:
 
-<!-- eslint-skip -->
+```js
+import dashbrains from '@dashbrains/eslint-config'
 
-```jsonc
-{
-  "extends": "@dashbrains/eslint-config",
-  "rules": {
-    // your rules...
-  }
-}
+export default [
+  ...dashbrains,
+  {
+    rules: {
+      // your rules...
+    },
+  },
+]
 ```
 
 Or you can always fork this repo and make your own.
